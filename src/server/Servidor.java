@@ -17,6 +17,7 @@ public class Servidor extends Thread{
 	private InetAddress ip_serv;  
 	//private SocketAddress serveAddress = new InetSocketAddress("10.20.6.186", 0);
 	private ConexaoJogador t1;
+	private ConexaoJogador t2;
 	
 	public Servidor(int port) {
 		this.port = port;
@@ -43,14 +44,17 @@ public class Servidor extends Thread{
 
 		//	=======================================
 			
-		while(true || p1.isClosed()) { //fazer um "semnaforo aqui"
+		while(true) { //fazer um "semnaforo aqui"
 			try {
 				//System.out.println(InetAddress.getByName("localhost"));
 				p1 = servidor.accept();
 				System.out.println("Connectado! Ip: " + p1.getInetAddress());
 				System.out.println(p1.getRemoteSocketAddress()+" connected\n");
-				t1 = new ConexaoJogador(p1);
-				t1.rodar();
+				if(t1.equals(null)) {
+					System.out.println("conecxtado");
+					t1 = new ConexaoJogador(p1);
+					t1.rodar();
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

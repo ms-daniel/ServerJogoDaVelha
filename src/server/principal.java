@@ -95,8 +95,7 @@ public class principal {
 		Janela.getContentPane().add(on_off);
 		
 		on_off.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
+			public void actionPerformed(ActionEvent arg0){
 				if(status.getIcon().equals(off)) {
 					server = new Servidor(Integer.parseInt(port.getText()));
 				    System.out.println(server.getPort());

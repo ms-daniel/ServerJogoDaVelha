@@ -4,15 +4,19 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 import javax.swing.JOptionPane;
 
 public class ClienteTeste {
 
-	public static void main(String[] args) throws UnknownHostException, IOException {
-		Socket conexao = new Socket("25.68.251.110", 6789);
+	public static void main(String[] args) throws IOException {
+		Socket conexao = new Socket("170.233.205.93", 9000);
+		
 		
 		BufferedReader conexao_entrada = new BufferedReader(
 				new InputStreamReader(conexao.getInputStream()));
