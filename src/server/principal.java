@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.BindException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -30,6 +31,7 @@ public class principal {
 	private JButton on_off;
 	//imagem se ta desligado ou ligado
 	private JLabel status;
+	private JTextField play;
 	
 	//variavel pra saber quantos clientes há no servidor
 	private int n_clie;
@@ -62,36 +64,44 @@ public class principal {
 	private void initialize() throws IOException {
 		//cria a janela
 		Janela = new JFrame("Servidor JdV");
-		Janela.setBounds(320, 80, 350, 250);
+		Janela.setBounds(320, 80, 280, 250);
 		Janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//Janela.setIconImage(logo.getImage());
 		Janela.getContentPane().setLayout(null);
 		
 		ip = new JTextField();
-		ip.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+		ip.setFont(new Font("Times New Roman", Font.PLAIN, 20));
 		ip.setDocument(new JTextFieldLimit(15));
 		ip.setText("000.000.000.000");
+		ip.setHorizontalAlignment(JTextField.CENTER);
 		ip.setEnabled(false);
-		ip.setBounds(10, 10, 115, 30);
+		ip.setBounds(10, 10, 250, 40);
 		Janela.getContentPane().add(ip);
 		
 		port = new JTextField();
 		port.setDocument(new JTextFieldLimit(5));
 		port.setText("9000");
-		port.setBounds(10, 50, 38, 30);
-		port.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+		port.setBounds(10, 60, 60, 40);
+		port.setHorizontalAlignment(JTextField.CENTER);
+		port.setFont(new Font("Times New Roman", Font.PLAIN, 20));
 		Janela.getContentPane().add(port);
 		
+		play = new JTextField("0");
+		play.setBounds(120, 60, 40, 40);
+		play.setHorizontalAlignment(JTextField.CENTER);
+		play.setEnabled(false);
+		play.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		Janela.getContentPane().add(play);
 		
 		status = new JLabel();
 		status.setIcon(off);
-		status.setBounds(250,160,70,31);
+		status.setBounds(180,160,70,31);
 		Janela.getContentPane().add(status);
 		
 		on_off = new JButton("On/Off");
 		on_off.setFont(new Font("Times New Roman", Font.PLAIN, 16));
 		on_off.setFocusPainted(false);
-		on_off.setBounds(125, 150, 100, 50);
+		on_off.setBounds(50, 150, 100, 50);
 		Janela.getContentPane().add(on_off);
 		
 		on_off.addActionListener(new ActionListener() {

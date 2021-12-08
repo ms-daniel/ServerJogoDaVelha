@@ -1,6 +1,7 @@
 package server;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -9,6 +10,7 @@ import java.net.SocketAddress;
 import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Servidor extends Thread{
 	private int port = 0;
@@ -16,6 +18,7 @@ public class Servidor extends Thread{
 	private Socket p1;
 	private InetAddress ip_serv;  
 	//private SocketAddress serveAddress = new InetSocketAddress("10.20.6.186", 0);
+	private int players = 0 ;
 	private ConexaoJogador t1;
 	private ConexaoJogador t2;
 	
@@ -36,7 +39,9 @@ public class Servidor extends Thread{
 			
 			try {
 				servidor = new ServerSocket(port);
-			} catch (IOException e) {
+			} catch (BindException e) {
+				JOptionPane.showMessageDialog(null, "essa porta ja esta aberta em algum servidor nesse host!", "Port Error", 1);
+			}catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -44,17 +49,28 @@ public class Servidor extends Thread{
 
 		//	=======================================
 			
-		while(true) { //fazer um "semnaforo aqui"
+		while(players<1) { //fazer um "semnaforo aqui"
 			try {
 				//System.out.println(InetAddress.getByName("localhost"));
-				p1 = servidor.accept();
-				System.out.println("Connectado! Ip: " + p1.getInetAddress());
-				System.out.println(p1.getRemoteSocketAddress()+" connected\n");
-				if(t1.equals(null)) {
-					System.out.println("conecxtado");
+				if(players<1) { // aceita conexao de ate dois jogadores
+					p1 = servidor.accept();
+					System.out.println("Connectado! Ip: " + p1.getInetAddress());
+					players++;
+				}else {//rejeita conexao de um terceiro jogador
+					servidor.close();
+					System.out.println("Fechado!");
+				}
+				
+				if(players == 1) {
+					System.out.println("player 1 conectado");
 					t1 = new ConexaoJogador(p1);
 					t1.rodar();
+				}else if (players == 2) {
+					
+				}else {
+					
 				}
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

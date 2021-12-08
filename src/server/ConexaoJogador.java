@@ -51,7 +51,7 @@ public class ConexaoJogador extends Thread{
 				}catch(SocketException e) {
 					System.out.println("Conexão perdida!");
 					
-					conexao_saida.writeBytes("sair" + '\n');
+//					conexao_saida.writeBytes("sair" + '\n');
 					
 					conexao_entrada.close();
 					conexao_saida.close();
@@ -85,6 +85,13 @@ public class ConexaoJogador extends Thread{
 		conexao_entrada.close();
 		conexao_saida.close();
 		conexao.close();
+	}
+	
+	public boolean hasConnection() {
+		if(this.conexao.isConnected())
+			return true;
+		else	
+			return false;
 	}
 
 }
