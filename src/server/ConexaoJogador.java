@@ -34,7 +34,7 @@ public class ConexaoJogador extends Thread{
 			conexao_saida = new DataOutputStream(
 					conexao.getOutputStream());
 			
-			conexao.setSoTimeout(60000);
+			conexao.setSoTimeout(10000);
 			String msg;
 			
 			while(!conexao_entrada.equals(null) || conexao_entrada.toString().equals(
@@ -51,7 +51,7 @@ public class ConexaoJogador extends Thread{
 				}catch(SocketException e) {
 					System.out.println("Conexão perdida!");
 					
-//					conexao_saida.writeBytes("sair" + '\n');
+					conexao_saida.writeBytes("sair" + '\n');
 					
 					conexao_entrada.close();
 					conexao_saida.close();

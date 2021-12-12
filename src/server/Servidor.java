@@ -11,6 +11,7 @@ import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 public class Servidor extends Thread{
 	private int port = 0;
@@ -19,11 +20,16 @@ public class Servidor extends Thread{
 	private InetAddress ip_serv;  
 	//private SocketAddress serveAddress = new InetSocketAddress("10.20.6.186", 0);
 	private int players = 0 ;
+	private JTextField plays;
 	private ConexaoJogador t1;
 	private ConexaoJogador t2;
 	
 	public Servidor(int port) {
 		this.port = port;
+	}
+	
+	public void setFieldPlayer(JTextField field) {
+		this.plays = field;
 	}
 	
 	public void run(){
@@ -56,6 +62,7 @@ public class Servidor extends Thread{
 					p1 = servidor.accept();
 					System.out.println("Connectado! Ip: " + p1.getInetAddress());
 					players++;
+					plays.setText(Integer.toString(players));
 				}else {//rejeita conexao de um terceiro jogador
 					servidor.close();
 					System.out.println("Fechado!");
@@ -75,6 +82,9 @@ public class Servidor extends Thread{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		while(t1.isAlive()) {
+			System.out.println("viv");
 		}
 	}
 	
