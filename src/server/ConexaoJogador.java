@@ -56,6 +56,7 @@ public class ConexaoJogador extends Thread{
 				}catch(SocketException e) {
 					System.out.println("Conexão perdida!");
 				
+					//metodo da class servidor diminui quantidade de jogadores
 					Servidor.lessPlayers();
 					
 					conexao_saida.writeBytes("sair" + '\n');
@@ -68,6 +69,7 @@ public class ConexaoJogador extends Thread{
 					System.out.println("Conexão limite atingida!");
 					conexao_saida.writeBytes("sair" + '\n');
 					
+					//metodo da class servidor diminui quantidade de jogadores
 					Servidor.lessPlayers();
 					
 					conexao_entrada.close();
