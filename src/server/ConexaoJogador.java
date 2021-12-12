@@ -9,10 +9,14 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 public class ConexaoJogador extends Thread{
 	private Socket conexao;
+	private Servidor serve;
 	private int cont = 3;
+	
+	private JTextField boxPlay;
 	
 	//recebe dado do cliente
 	private BufferedReader conexao_entrada;
@@ -20,8 +24,9 @@ public class ConexaoJogador extends Thread{
 	//aqui manda dado pro cliente
 	private DataOutputStream conexao_saida;
 	
-	public ConexaoJogador(Socket cone) {
+	public ConexaoJogador(Socket cone, JTextField boxP) {
 		this.conexao = cone;
+		this.boxPlay = boxP;
 	}
 	
 	public void rodar() {
@@ -50,6 +55,8 @@ public class ConexaoJogador extends Thread{
 					
 				}catch(SocketException e) {
 					System.out.println("Conexão perdida!");
+				
+					Servidor.lessPlayers();
 					
 					conexao_saida.writeBytes("sair" + '\n');
 					
@@ -60,6 +67,8 @@ public class ConexaoJogador extends Thread{
 				}catch(SocketTimeoutException f) {
 					System.out.println("Conexão limite atingida!");
 					conexao_saida.writeBytes("sair" + '\n');
+					
+					Servidor.lessPlayers();
 					
 					conexao_entrada.close();
 					conexao_saida.close();

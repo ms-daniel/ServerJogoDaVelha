@@ -7,6 +7,7 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
@@ -19,8 +20,8 @@ public class Servidor extends Thread{
 	private Socket p1;
 	private InetAddress ip_serv;  
 	//private SocketAddress serveAddress = new InetSocketAddress("10.20.6.186", 0);
-	private int players = 0 ;
-	private JTextField plays;
+	private static int players = 0 ;
+	private static JTextField plays;
 	private ConexaoJogador t1;
 	private ConexaoJogador t2;
 	
@@ -30,6 +31,11 @@ public class Servidor extends Thread{
 	
 	public void setFieldPlayer(JTextField field) {
 		this.plays = field;
+	}
+	
+	public static void lessPlayers() {
+		players--;
+		plays.setText(Integer.toString(players));
 	}
 	
 	public void run(){
@@ -55,10 +61,10 @@ public class Servidor extends Thread{
 
 		//	=======================================
 			
-		while(players<1) { //fazer um "semnaforo aqui"
+		while(players<2) { //fazer um "semnaforo aqui"
 			try {
 				//System.out.println(InetAddress.getByName("localhost"));
-				if(players<1) { // aceita conexao de ate dois jogadores
+				if(players<2) { // aceita conexao de ate dois jogadores
 					p1 = servidor.accept();
 					System.out.println("Connectado! Ip: " + p1.getInetAddress());
 					players++;
@@ -70,10 +76,12 @@ public class Servidor extends Thread{
 				
 				if(players == 1) {
 					System.out.println("player 1 conectado");
-					t1 = new ConexaoJogador(p1);
+					t1 = new ConexaoJogador(p1, plays);
 					t1.rodar();
 				}else if (players == 2) {
-					
+					System.out.println("player 2 conectado");
+					t2 = new ConexaoJogador(p1, plays);
+					t2.rodar();
 				}else {
 					
 				}
@@ -83,9 +91,9 @@ public class Servidor extends Thread{
 				e.printStackTrace();
 			}
 		}
-		while(t1.isAlive()) {
-			System.out.println("viv");
-		}
+//		while(t1.isAlive()) {
+//			System.out.println("viv");
+//		}
 	}
 	
 	/*public void iniciar() throws IOException {
