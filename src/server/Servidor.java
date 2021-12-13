@@ -33,6 +33,7 @@ public class Servidor extends Thread{
 		this.plays = field;
 	}
 	
+	//diminui quantidade de jogadores e pode ser chamado em qualquer class do package
 	public static void lessPlayers() {
 		players--;
 		plays.setText(Integer.toString(players));
@@ -91,24 +92,6 @@ public class Servidor extends Thread{
 				e.printStackTrace();
 			}
 		}
-//		while(t1.isAlive()) {
-//			System.out.println("viv");
-//		}
-	}
-	
-	/*public void iniciar() throws IOException {
-		if(this.port == 0)
-			servidor = new ServerSocket(6789);
-		else
-			servidor = new ServerSocket(port);
-		
-		while(true) {
-			Socket p1 = servidor.accept();
-			System.out.println("Connectado! Ip: " + p1.getInetAddress());
-			ConexaoJogador t1 = new ConexaoJogador(p1);
-			t1.rodar();
-		}
-	}*/
 	
 	public boolean setPort(int n) {
 		if(servidor.isClosed()) {
