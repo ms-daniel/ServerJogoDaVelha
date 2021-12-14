@@ -28,7 +28,7 @@ public class Servidor extends Thread{
 	public Servidor(int port) {
 		this.port = port;
 	}
-	
+	//recebe referencia do box de texto para quantiadades de jogadores conectados
 	public void setFieldPlayer(JTextField field) {
 		this.plays = field;
 	}
@@ -92,6 +92,7 @@ public class Servidor extends Thread{
 				e.printStackTrace();
 			}
 		}
+	}
 	
 	public boolean setPort(int n) {
 		if(servidor.isClosed()) {
