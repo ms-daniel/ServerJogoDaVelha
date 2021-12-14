@@ -15,6 +15,7 @@ public class ConexaoJogador extends Thread{
 	private Socket conexao;
 	private Servidor serve;
 	private int cont = 3;
+	private boolean first;
 	
 	private JTextField boxPlay;
 	
@@ -38,6 +39,10 @@ public class ConexaoJogador extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	//usdo para saber qual jogador começa primeiro
+	public void First(boolean tf) {
+		this.first = tf;
 	}
 	
 	public void rodar() {
