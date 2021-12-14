@@ -43,17 +43,23 @@ public class ConexaoJogador extends Thread{
 	//usdo para saber qual jogador começa primeiro
 	public void First(boolean tf) {
 		this.first = tf;
+		try {
+			//aqui recebe do cliente
+			conexao_entrada = new BufferedReader(
+					new InputStreamReader(conexao.getInputStream()));
+			//aqui manda pro cliente
+			conexao_saida = new DataOutputStream(
+					conexao.getOutputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void rodar() {
 		try {
-			//aqui recebe a vara do cliente
-			conexao_entrada = new BufferedReader(
-					new InputStreamReader(conexao.getInputStream()));
 			
-			//aqui manda vara pro cliente
-			conexao_saida = new DataOutputStream(
-					conexao.getOutputStream());
+			
 			
 			conexao.setSoTimeout(10000);
 			

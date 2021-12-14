@@ -109,7 +109,6 @@ public class principal {
 				if(status.getIcon().equals(off)) {
 					server = new Servidor(Integer.parseInt(port.getText()));
 					server.setFieldPlayer(play);
-				    System.out.println(server.getPort());
 				   try {
 					server.start();
 					status.setIcon(on);

@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -18,11 +19,14 @@ public class Servidor extends Thread{
 	private int port = 0;
 	private ServerSocket servidor;
 	private Socket p1;
-	private InetAddress ip_serv;  
 	//private SocketAddress serveAddress = new InetSocketAddress("10.20.6.186", 0);
 	private static int players = 0 ;
 	private static JTextField plays;
+	
+	//instanciara dois objetos para melhor controlar o fluxo
 	private ConexaoJogador t1;
+	private boolean first_t1;
+	private boolean first_t2;
 	private ConexaoJogador t2;
 	
 	public Servidor(int port) {
@@ -41,6 +45,7 @@ public class Servidor extends Thread{
 	
 	public void run(){
 		//try catch iniciar servidor socket
+		//atribuição da porta que é enviada pela interface grafica
 		if(this.port == 0) {
 			try {
 				servidor = new ServerSocket(9000);
@@ -49,7 +54,6 @@ public class Servidor extends Thread{
 				e.printStackTrace();}
 			
 		} else {
-			
 			try {
 				servidor = new ServerSocket(port);
 			} catch (BindException e) {
@@ -83,17 +87,22 @@ public class Servidor extends Thread{
 					System.out.println("player 2 conectado");
 					t2 = new ConexaoJogador(p1, plays);
 					t2.rodar();
-				}else {
-					
 				}
-				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		
+		//depois dos dois jogadores conectados
+		WhoFirst(); //randomicamente seta algum dos dois para começar
+		
+		t1.First(first_t1); //diz se ele será o primeiro
+		t2.First(first_t2); //ou o outro
+		
+		
 	}
-	
+	//recebe porta da itnerface grafica 
 	public boolean setPort(int n) {
 		if(servidor.isClosed()) {
 			this.port = n;
@@ -102,10 +111,11 @@ public class Servidor extends Thread{
 		
 		return true;
 	}
+	
 	public int getPort() {
 		return this.port;
 	}
-	
+	//fecha servidor
 	public boolean closeServer() throws IOException {
 		servidor.close();
 		p1.close();
@@ -117,9 +127,24 @@ public class Servidor extends Thread{
 		else
 			return false;
 	}
-	
+	//verifica se servidor esta fechado
 	public boolean isClose() {
 		return servidor.isClosed();
+	}
+	
+	private void WhoFirst() {
+		Random randomico = new Random();
+		int n = randomico.nextInt(999);
+		
+		//se o numero for pá o primeiro jogador começa
+		if((n%2)==0) {
+			first_t1 = true;
+			first_t2 = false;
+		}else {
+			first_t1 = false;
+			first_t2 = true;
+		}
+		
 	}
 	
 }
