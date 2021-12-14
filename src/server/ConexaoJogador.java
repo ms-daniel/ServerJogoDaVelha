@@ -29,6 +29,17 @@ public class ConexaoJogador extends Thread{
 		this.boxPlay = boxP;
 	}
 	
+	//quando o jogador 2 se conecta é mandada uma notificação ao jogador 1
+	public void notificar(Socket p2) {
+		try {
+			DataOutputStream conexaop2 = new DataOutputStream(p2.getOutputStream());
+			conexaop2.writeBytes("D" + '\n');
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void rodar() {
 		try {
 			//aqui recebe a vara do cliente
@@ -40,18 +51,14 @@ public class ConexaoJogador extends Thread{
 					conexao.getOutputStream());
 			
 			conexao.setSoTimeout(10000);
-			String msg;
 			
 			while(!conexao_entrada.equals(null) || conexao_entrada.toString().equals(
 					new String("sair"))) {
 				System.out.println("tempo restante: " + conexao.getSoTimeout());
 				
 				try {
-					msg ="Cliente: " + conexao_entrada.readLine();
-					JOptionPane.showMessageDialog(null, msg);
-					System.out.println("mandando!");
-					conexao_saida.writeBytes("foda-se" + '\n');
-
+					conexao_entrada.readLine(); //recebendo do cliente
+//					System.out.println("recebido!");
 					
 				}catch(SocketException e) {
 					System.out.println("Conexão perdida!");
@@ -66,21 +73,19 @@ public class ConexaoJogador extends Thread{
 					conexao.close();
 					break;
 				}catch(SocketTimeoutException f) {
-					System.out.println("Conexão limite atingida!");
-					conexao_saida.writeBytes("sair" + '\n');
-					
-					//metodo da class servidor diminui quantidade de jogadores
-					Servidor.lessPlayers();
-					
-					conexao_entrada.close();
-					conexao_saida.close();
-					conexao.close();
+					System.out.println("Passou a vez!");
+//					conexao_saida.writeBytes("sair" + '\n');
+//					
+//					//metodo da class servidor diminui quantidade de jogadores
+//					Servidor.lessPlayers();
+//					
+//					conexao_entrada.close();
+//					conexao_saida.close();
+//					conexao.close();
 					break;
 				}
 					cont--;
 			}
-			
-			//conexao_saida.writeBytes("foda-se otario" + '\n');
 			
 			conexao_entrada.close();
 			conexao_saida.close();
