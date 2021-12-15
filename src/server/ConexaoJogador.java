@@ -17,6 +17,8 @@ public class ConexaoJogador extends Thread{
 	private int cont = 3;
 	private boolean first;
 	
+	private boolean win = false; //se há jogador
+	
 	private JTextField boxPlay;
 	
 	//recebe dado do cliente
@@ -31,10 +33,16 @@ public class ConexaoJogador extends Thread{
 	}
 	
 	//quando o jogador 2 se conecta é mandada uma notificação ao jogador 1
-	public void notificar(Socket p2) {
+	public void notificar(Socket p1, Socket p2) {
 		try {
+			//mandar done pro socket 1
+			DataOutputStream conexaop1 = new DataOutputStream(p1.getOutputStream());
+			conexaop1.writeBytes("D" + '\n');
+			
+			//mandar done pro socket 2
 			DataOutputStream conexaop2 = new DataOutputStream(p2.getOutputStream());
 			conexaop2.writeBytes("D" + '\n');
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,6 +51,8 @@ public class ConexaoJogador extends Thread{
 	//usdo para saber qual jogador começa primeiro
 	public void First(boolean tf) {
 		this.first = tf;
+		
+		//fazer a conexão dos canais de entrada e de saida de dados
 		try {
 			//aqui recebe do cliente
 			conexao_entrada = new BufferedReader(
@@ -57,6 +67,11 @@ public class ConexaoJogador extends Thread{
 	}
 	
 	public void rodar() {
+		while(!win) {
+			synchronized (conexao_entrada) {
+				 
+			}
+		}
 		try {
 			
 			

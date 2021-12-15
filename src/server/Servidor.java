@@ -25,13 +25,16 @@ public class Servidor extends Thread{
 	
 	//instanciara dois objetos para melhor controlar o fluxo
 	private ConexaoJogador t1;
+	private ConexaoJogador t2;
+	
+	//boolean para saber quem começa
 	private boolean first_t1;
 	private boolean first_t2;
-	private ConexaoJogador t2;
 	
 	public Servidor(int port) {
 		this.port = port;
 	}
+	
 	//recebe referencia do box de texto para quantiadades de jogadores conectados
 	public void setFieldPlayer(JTextField field) {
 		this.plays = field;
@@ -74,6 +77,7 @@ public class Servidor extends Thread{
 					System.out.println("Connectado! Ip: " + p1.getInetAddress());
 					players++;
 					plays.setText(Integer.toString(players));
+					
 				}else {//rejeita conexao de um terceiro jogador
 					servidor.close();
 					System.out.println("Fechado!");
@@ -82,13 +86,13 @@ public class Servidor extends Thread{
 				if(players == 1) {
 					System.out.println("player 1 conectado");
 					t1 = new ConexaoJogador(p1, plays);
-					t1.rodar();
+					//t1.rodar();
 				}else if (players == 2) {
 					System.out.println("player 2 conectado");
 					t2 = new ConexaoJogador(p1, plays);
-					t2.rodar();
+					//t2.rodar();
 				}
-			} catch (IOException e) {
+			}catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -99,6 +103,9 @@ public class Servidor extends Thread{
 		
 		t1.First(first_t1); //diz se ele será o primeiro
 		t2.First(first_t2); //ou o outro
+		
+		
+		
 		
 		
 	}
