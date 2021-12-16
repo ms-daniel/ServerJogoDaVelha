@@ -106,30 +106,32 @@ public class ConexaoJogador extends Thread{
 			try {
 					System.out.println("jogador : " + nome);
 					try {
-						if(!win)
+						if(win_number.equals(""))
 							System.out.println("do cliente: " + (toCliente = conexao_entrada.readLine()));
+						else
+							win = true;
 						
 							if(toCliente.matches("[0-9]+")) {
 								putMatriz(Integer.parseInt(toCliente), Integer.parseInt(nome));
 								cont++;
-								PrintMatriz();
+//								PrintMatriz();
 							}
 							
+							System.out.println("\nEstamos com: " + nome);
+							
+							if(cont > 3 && HaveWinner()) {
+								System.out.println("Temos um vencedor");
+							}
 							
 							if(!win) {
 								conexao_saida_p2.writeBytes(toCliente + '\n'); //envia dado para o outro cliente
 							}
 							else {
-								System.out.println("\n\nVencedor: " + win_number + "\n nome: " + nome);
-								if(!win_number.equals(nome))
-									conexao_saida_p2.writeBytes("V" + '\n');
-								else
-									conexao_saida_p2.writeBytes("P" + '\n');
+								
+								conexao_saida_p2.writeBytes("V" + '\n');
+								conexao_saida.writeBytes("P" + '\n');
 							}
-							if(cont > 3 && HaveWinner()) {
-								System.out.println("Temos um vencedor");
-								win = true;
-							}
+							
 							
 					} catch (SocketException e) {
 						Servidor.lessPlayers();

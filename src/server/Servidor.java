@@ -117,9 +117,7 @@ public class Servidor extends Thread{
 		t1.notificar(t1.getSocket(), t2.getSocket());
 		
 		//depois dos dois jogadores conectados
-		//WhoFirst(); //randomicamente seta algum dos dois para começar
-		first_t1 = true;
-		first_t2 = false;
+		WhoFirst(); //randomicamente seta algum dos dois para começar
 		t1.First(first_t1); //diz se ele será o primeiro
 		t2.First(first_t2); //ou o outro
 		
@@ -134,10 +132,13 @@ public class Servidor extends Thread{
 			
 		}else{
 			System.out.println("t2");
-			t2.iniciar();
-			Dormir(10);
-			t1.iniciar();
+			while(!t1.Winner()) {
+				t2.iniciar();
+				t1.iniciar();
+			}
 		}
+		Dormir(3000);
+		System.exit(0);
 	}
 	//recebe porta da itnerface grafica 
 	public boolean setPort(int n) {
