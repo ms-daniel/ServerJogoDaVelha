@@ -111,8 +111,8 @@ public class Servidor extends Thread{
 			e.printStackTrace();
 		}
 		
-		t1.setNome("cliente 1");
-		t2.setNome("cliente 2");
+		t1.setNome("1");
+		t2.setNome("2");
 		//avisa para os dois que ja estão prontos
 		t1.notificar(t1.getSocket(), t2.getSocket());
 		

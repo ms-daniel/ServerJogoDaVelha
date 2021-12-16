@@ -17,7 +17,9 @@ public class ConexaoJogador extends Thread{
 	private String nome;
 	private String toCliente = "";
 	
-	private boolean win = false; //se há jogador
+	private boolean win = false; //se há jogador vencedor
+	private static int[][] matriz = new int[3][3]; //matriz do tavbuleiro
+	private static int cont = 0;
 	
 	private JTextField boxPlay;
 	
@@ -60,12 +62,9 @@ public class ConexaoJogador extends Thread{
 			conexaop2.writeBytes("D" + '\n');
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
-		} //catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		}
 	}
 	//usdo para saber qual jogador começa primeiro
 	public void First(boolean tf) {
@@ -103,10 +102,21 @@ public class ConexaoJogador extends Thread{
 	
 	public void rodar() {
 			try {
-					System.out.println(nome);
+					System.out.println("jogador : " + nome);
 					try {
 							System.out.println("do cliente: " + (toCliente = conexao_entrada.readLine()));
-							conexao_saida_p2.writeBytes(toCliente + '\n');
+							
+							if(toCliente.matches("[0-9]+")) {
+								putMatriz(Integer.parseInt(toCliente), Integer.parseInt(nome));
+								cont++;
+								PrintMatriz();
+							}
+							
+							if(cont > 3 && HaveWinner())
+								System.out.println("Temos um vencedor");
+							
+							conexao_saida_p2.writeBytes(toCliente + '\n'); //envia dado para o outro cliente
+							
 					} catch (SocketException e) {
 						Servidor.lessPlayers();
 						
@@ -128,55 +138,114 @@ public class ConexaoJogador extends Thread{
 			}catch (IOException e) {
 				
 			}
+	}
+	
+	//poe numeros na matriz
+	private void putMatriz(int pos, int cli) { //recebe a posição e o numero do cliente
+		if(pos == 1) {
+			matriz[0][0] = cli;
+		}
+		else if(pos == 2) {
+			matriz[0][1] = cli;
+		}
+		else if(pos == 3) {
+			matriz[0][2] = cli;
+		}
+		else if(pos == 4) {
+			matriz[1][0] = cli;
+		}
+		else if(pos == 5) {
+			matriz[1][1] = cli;
+		}
+		else if(pos == 6) {
+			matriz[1][2] = cli;
+		}
+		else if(pos == 7) {
+			matriz[2][0] = cli;
+		}
+		else if(pos == 8) {
+			matriz[2][1] = cli;
+		}
+		else if(pos == 9) {
+			matriz[2][2] = cli;
+		}
+	}
+	
+	//mostra a matriz, futuramente colocar isso em text field na parte grafica e atualizar em tempo real
+	private void PrintMatriz() {
+		System.out.println("\nMatriz: ");
+		for(int i = 0; i < 3; i++) {
+			for(int j = 0; j < 3; j++) {
+				System.out.print(matriz[i][j] + " ");
+			}
+			System.out.println("");
+		}
+	}
+	
+	private boolean HaveWinner() {
+		int freq = 0;
+		
+		//linha a linha
+		for(int i = 0; i <3; i++) {
+			for(int j = 0; j <3; j++) {
+				
+				if(j == 0 && matriz[i][j] != 0) 
+					freq = matriz[i][j];
+				
+				if(j > 0 && (matriz[i][j] == 0 || matriz[i][j] != freq)) {
+					freq = 0;
+					break;
+				}
+					
+			}
+			if(freq != 0) {
+				return true;
+			}
+		}
+		
+		//coluna por coluna
+		for(int i = 0; i <3; i++) {
+			for(int j = 0; j <3; j++) {
+				
+				if(j == 0 && matriz[j][i] != 0)
+					freq = matriz[j][i];
+				
+				if(j > 0 && (matriz[j][i] == 0 || matriz[j][i] != freq)) {
+					freq = 0;
+					break;
+				}
+					
+			}
+			if(freq != 0)
+				return true;
+		}
+		
+		if(matriz[1][1] != 0) { //verifica se o meio do tabuleiro é diferente de zero
+			freq = matriz[1][1];
+			
+			
+			
+			System.out.println("\n\nMEIO É DIFERENTE DE 0\n\n");
+			
+			if(matriz[0][0] != freq || matriz[2][2] != freq) { //verifica primeira diagonal
 
-//		try {
-//			
-//			
-//			
-//			conexao.setSoTimeout(10000);
-//			
-//			while(!conexao_entrada.equals(null) || conexao_entrada.toString().equals(
-//					new String("sair"))) {
-//				System.out.println("tempo restante: " + conexao.getSoTimeout());
-//				
-//				try {
-//					conexao_entrada.readLine(); //recebendo do cliente
-////					System.out.println("recebido!");
-//					
-//				}catch(SocketException e) {
-//					System.out.println("Conexão perdida!");
-//				
-//					//metodo da class servidor diminui quantidade de jogadores
-//					Servidor.lessPlayers();
-//					
-//					conexao_saida.writeBytes("sair" + '\n');
-//					
-//					conexao_entrada.close();
-//					conexao_saida.close();
-//					conexao.close();
-//					break;
-//				}catch(SocketTimeoutException f) {
-//					System.out.println("Passou a vez!");
-////					conexao_saida.writeBytes("sair" + '\n');
-////					
-////					//metodo da class servidor diminui quantidade de jogadores
-////					Servidor.lessPlayers();
-////					
-////					conexao_entrada.close();
-////					conexao_saida.close();
-////					conexao.close();
-//					break;
-//				}
-//					cont--;
-//			}
-//			
-//			conexao_entrada.close();
-//			conexao_saida.close();
-//			conexao.close();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+//				System.out.println("\ndeu 0 de novo - 1\n " + freq);
+			}else {
+				return true;
+			}
+			
+			
+			if(matriz[0][2] != freq || matriz[2][0] != freq) { //verifica segunda diagonal
+				
+//				System.out.println("\ndeu 0 de novo- 2 \n" + freq);
+			}else {
+				return true;
+			}
+			
+			freq = 0;
+		}
+		
+		return false;
 	}
 	
 	public void beClose() throws IOException {
