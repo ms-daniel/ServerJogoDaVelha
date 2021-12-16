@@ -1,5 +1,6 @@
 package server;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.BindException;
 import java.net.InetAddress;
@@ -98,16 +99,45 @@ public class Servidor extends Thread{
 			}
 		}
 		
-		//depois dos dois jogadores conectados
-		WhoFirst(); //randomicamente seta algum dos dois para começar
+		//sleep para dar tempo de notificar os usuarios e não bugar os paineis de dialogo
+		Dormir(5000);
 		
+		//liga as saidas dos outros sockets
+		try {
+			t1.setSaidaPlayer2(new DataOutputStream(t2.getSocket().getOutputStream()));
+			t2.setSaidaPlayer2(new DataOutputStream(t1.getSocket().getOutputStream()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		t1.setNome("cliente 1");
+		t2.setNome("cliente 2");
+		//avisa para os dois que ja estão prontos
+		t1.notificar(t1.getSocket(), t2.getSocket());
+		
+		//depois dos dois jogadores conectados
+		//WhoFirst(); //randomicamente seta algum dos dois para começar
+		first_t1 = true;
+		first_t2 = false;
 		t1.First(first_t1); //diz se ele será o primeiro
 		t2.First(first_t2); //ou o outro
 		
-		
-		
-		
-		
+		//Dormir(2300);
+		//ordem para entrar no synchronized
+		if(first_t1){
+			System.out.println("t1");
+			while(!t1.Winner()) {
+				t1.iniciar();
+				t2.iniciar();
+			}
+			
+		}else{
+			System.out.println("t2");
+			t2.iniciar();
+			Dormir(10);
+			t1.iniciar();
+		}
 	}
 	//recebe porta da itnerface grafica 
 	public boolean setPort(int n) {
@@ -152,6 +182,15 @@ public class Servidor extends Thread{
 			first_t2 = true;
 		}
 		
+	}
+	
+	public void Dormir(long time) {
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

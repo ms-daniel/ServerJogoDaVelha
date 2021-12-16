@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-public class principal {
+public class main {
 	//janela grafica
 	private JFrame Janela;
 	
@@ -48,7 +48,7 @@ public class principal {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					principal window = new principal();
+					main window = new main();
 					window.Janela.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -57,7 +57,7 @@ public class principal {
 		});
 	}
 	
-	public principal() throws IOException {
+	public main() throws IOException {
 		initialize();
 	}
 	
