@@ -17,7 +17,9 @@ public class ConexaoJogador extends Thread{
 	private String nome;
 	private String toCliente = "";
 	
-	private boolean win = false; //se há jogador vencedor
+	private int freq = 0;
+	private static String win_number = "";
+	private static boolean win = false; //se há jogador vencedor
 	private static int[][] matriz = new int[3][3]; //matriz do tavbuleiro
 	private static int cont = 0;
 	
@@ -104,18 +106,30 @@ public class ConexaoJogador extends Thread{
 			try {
 					System.out.println("jogador : " + nome);
 					try {
+						if(!win)
 							System.out.println("do cliente: " + (toCliente = conexao_entrada.readLine()));
-							
+						
 							if(toCliente.matches("[0-9]+")) {
 								putMatriz(Integer.parseInt(toCliente), Integer.parseInt(nome));
 								cont++;
 								PrintMatriz();
 							}
 							
-							if(cont > 3 && HaveWinner())
-								System.out.println("Temos um vencedor");
 							
-							conexao_saida_p2.writeBytes(toCliente + '\n'); //envia dado para o outro cliente
+							if(!win) {
+								conexao_saida_p2.writeBytes(toCliente + '\n'); //envia dado para o outro cliente
+							}
+							else {
+								System.out.println("\n\nVencedor: " + win_number + "\n nome: " + nome);
+								if(!win_number.equals(nome))
+									conexao_saida_p2.writeBytes("V" + '\n');
+								else
+									conexao_saida_p2.writeBytes("P" + '\n');
+							}
+							if(cont > 3 && HaveWinner()) {
+								System.out.println("Temos um vencedor");
+								win = true;
+							}
 							
 					} catch (SocketException e) {
 						Servidor.lessPlayers();
@@ -183,7 +197,6 @@ public class ConexaoJogador extends Thread{
 	}
 	
 	private boolean HaveWinner() {
-		int freq = 0;
 		
 		//linha a linha
 		for(int i = 0; i <3; i++) {
@@ -199,6 +212,7 @@ public class ConexaoJogador extends Thread{
 					
 			}
 			if(freq != 0) {
+				win_number = Integer.toString(freq);
 				return true;
 			}
 		}
@@ -216,29 +230,30 @@ public class ConexaoJogador extends Thread{
 				}
 					
 			}
-			if(freq != 0)
+			if(freq != 0) {
+				win_number = Integer.toString(freq);
 				return true;
+			}
 		}
 		
 		if(matriz[1][1] != 0) { //verifica se o meio do tabuleiro é diferente de zero
 			freq = matriz[1][1];
 			
 			
-			
-			System.out.println("\n\nMEIO É DIFERENTE DE 0\n\n");
+	
 			
 			if(matriz[0][0] != freq || matriz[2][2] != freq) { //verifica primeira diagonal
 
-//				System.out.println("\ndeu 0 de novo - 1\n " + freq);
 			}else {
+				win_number = Integer.toString(freq);
 				return true;
 			}
 			
 			
 			if(matriz[0][2] != freq || matriz[2][0] != freq) { //verifica segunda diagonal
 				
-//				System.out.println("\ndeu 0 de novo- 2 \n" + freq);
 			}else {
+				win_number = Integer.toString(freq);
 				return true;
 			}
 			
